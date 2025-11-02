@@ -7,13 +7,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcanteen.R;
 import com.example.smartcanteen.database.DBHelper;
-import com.example.smartcanteen.models.MenuItem;
 import com.example.smartcanteen.models.Order;
 import com.example.smartcanteen.utils.CartManager;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class OrderConfirmActivity extends AppCompatActivity {
     DBHelper db;
@@ -32,12 +31,12 @@ public class OrderConfirmActivity extends AppCompatActivity {
 
         // Build and set the order summary string
         StringBuilder summaryBuilder = new StringBuilder();
-        Map<MenuItem, Integer> cart = CartManager.getInstance().getCart();
-        if (cart.isEmpty()) {
+        List<CartManager.CartItem> cartItems = CartManager.getInstance().getItems();
+        if (cartItems.isEmpty()) {
             summaryBuilder.append("Your cart is empty.");
         } else {
-            for (Map.Entry<MenuItem, Integer> entry : cart.entrySet()) {
-                summaryBuilder.append(String.format(Locale.getDefault(), "- %d x %s\n", entry.getValue(), entry.getKey().getName()));
+            for (CartManager.CartItem cartItem : cartItems) {
+                summaryBuilder.append(String.format(Locale.getDefault(), "- %d x %s\n", cartItem.qty, cartItem.menuItem.getName()));
             }
         }
         tvSummary.setText(summaryBuilder.toString().trim());
@@ -47,7 +46,7 @@ public class OrderConfirmActivity extends AppCompatActivity {
         tvTotal.setText(String.format(Locale.getDefault(), "Total: ₹%.2f", total));
 
         btnPlace.setOnClickListener(v -> {
-            if (CartManager.getInstance().getCart().isEmpty()) {
+            if (CartManager.getInstance().getItems().isEmpty()) {
                 Toast.makeText(this, "Cannot place an empty order.", Toast.LENGTH_SHORT).show();
                 return;
             }

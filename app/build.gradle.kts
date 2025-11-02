@@ -30,6 +30,17 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    kapt {
+        javacOptions {
+            // These options are necessary for Kapt to work correctly with Java 17+
+            option("--add-opens=java.base/java.lang=ALL-UNNAMED")
+            option("--add-opens=java.base/java.io=ALL-UNNAMED")
+            option("--add-opens=java.base/java.util=ALL-UNNAMED")
+            option("--add-opens=java.base/java.util.concurrent=ALL-UNNAMED")
+            option("--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED")
+        }
+    }
 }
 
 dependencies {
