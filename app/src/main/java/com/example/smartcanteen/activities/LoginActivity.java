@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,13 +22,18 @@ public class LoginActivity extends AppCompatActivity {
         db = new DBHelper(this);
         etEmail = findViewById(R.id.etEmail);
         etPass = findViewById(R.id.etPass);
+        rgRole = findViewById(R.id.rgRole);
         Button btnLogin = findViewById(R.id.btnLogin);
         Button btnRegister = findViewById(R.id.btnRegister);
 
         btnLogin.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
             String pass = etPass.getText().toString().trim();
-            User u = db.loginUser(email, pass);
+            int selectedId = rgRole.getCheckedRadioButtonId();
+            RadioButton selectedRadioButton = findViewById(selectedId);
+            String role = selectedRadioButton.getText().toString();
+
+            User u = db.loginUser(email, pass, role);
             if(u!=null){
                 Toast.makeText(this, "Welcome "+u.getName(), Toast.LENGTH_SHORT).show();
                 if("Admin".equalsIgnoreCase(u.getRole())){

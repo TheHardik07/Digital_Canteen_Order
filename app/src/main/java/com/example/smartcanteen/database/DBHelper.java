@@ -70,9 +70,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return id != -1;
     }
 
-    public User loginUser(String email, String password) {
+    public User loginUser(String email, String password, String role) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE email=? AND password=?", new String[]{email, password});
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE email=? AND password=? AND role=?", new String[]{email, password, role});
         if (c.moveToFirst()) {
             User u = new User(c.getInt(0), c.getString(1), c.getString(2), c.getString(4));
             c.close();
